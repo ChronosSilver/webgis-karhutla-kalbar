@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Sebaran Karhutla - Kalimantan Barat</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Sidebar Panel -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <h2>Karhutla Kalbar</h2>
+                <div style="display: flex; gap: 8px;">
+                    <button id="toggle-theme" class="icon-btn" aria-label="Ganti Tema" title="Mode Gelap/Terang">🌙</button>
+                    <button id="toggle-sidebar" class="icon-btn" aria-label="Tutup Panel" title="Tutup Panel">⟨</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-content">
+                <p class="description" style="margin-bottom: 24px;">Peta Sebaran Kebakaran Hutan dan Lahan di Provinsi Kalimantan Barat.</p>
+                
+                <!-- SUMMARY METRICS -->
+                <div id="sidebar-summary" class="summary-cards">
+                    <!-- Diisi otomatis oleh JavaScript -->
+                </div>
+
+                <!-- 1. FILTER RENTANG TANGGAL -->
+                <div class="filter-section">
+                    <label class="filter-label">Rentang Tanggal Kejadian</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="date" id="filter-start-date" class="filter-dropdown" style="flex: 1;" title="Dari Tanggal">
+                        <input type="date" id="filter-end-date" class="filter-dropdown" style="flex: 1;" title="Sampai Tanggal">
+                    </div>
+                </div>
+
+                <!-- 2. FILTER TINGKAT KEPERCAYAAN (CONFIDENCE) -->
+                <div class="filter-section" style="margin-top: 20px;">
+                    <label class="filter-label">Tingkat Kepercayaan</label>
+                    <div class="checkbox-group" id="container-confidence">
+                        <!-- Opsi Checkbox Confidence dengan Legenda -->
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="conf" value="high" checked> 
+                            <span class="legend-dot" style="background-color: #dc2626;"></span> High
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="conf" value="medium" checked> 
+                            <span class="legend-dot" style="background-color: #f97316;"></span> Medium
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="conf" value="low" checked> 
+                            <span class="legend-dot" style="background-color: #eab308;"></span> Low
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. FILTER WILAYAH ADMINISTRASI -->
+                <div class="filter-section" style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label class="filter-label">Wilayah Administrasi</label>
+                        <button id="btn-check-all-kab" style="font-size: 0.7rem; cursor: pointer; border: none; background: none; color: #2563eb; font-weight: 600;">Pilih Semua</button>
+                    </div>
+                    <div class="checkbox-group scrollable" id="container-kabupaten">
+                        <!-- Opsi Checkbox Kabupaten diisi oleh JavaScript -->
+                    </div>
+                </div>
+
+                <!-- 4. FILTER SATELIT -->
+                <div class="filter-section" style="margin-top: 20px;">
+                    <label class="filter-label">Satelit Pendeteksi</label>
+                    <select id="filter-satelit" class="filter-dropdown">
+                        <option value="SEMUA">Semua Satelit</option>
+                        <!-- Opsi akan diisi otomatis melalui JavaScript -->
+                    </select>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- Main Map Area -->
+        <main id="map-container">
+            <!-- FLOATING BASEMAP SELECTOR (KANAN ATAS) -->
+            <div class="floating-basemap" id="basemap-controls">
+                <button class="float-btn active" data-layer="osm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    Berwarna
+                </button>
+                <button class="float-btn" data-layer="satelit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                    Satelit
+                </button>
+                <button class="float-btn" data-layer="topo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    Topo
+                </button>
+            </div>
+
+            <!-- Tombol Buka Panel (Muncul saat sidebar ditutup) -->
+            <button id="open-sidebar" aria-label="Buka Panel" title="Buka Panel">☰</button>
+            
+            <div id="map"></div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- PapaParse JS untuk membaca CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>

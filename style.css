@@ -1,0 +1,477 @@
+/* 
+ * style.css
+ * Desain mengikuti prinsip Antislop: 
+ * - Fokus pada konten (C-3)
+ * - Interaktifitas nyata (R-26) 
+ * - Tanpa dekorasi berlebihan tanpa tujuan
+ */
+
+:root {
+    /* LIGHT THEME (Bawaan) */
+    --bg-main: #f3f4f6;
+    --bg-surface: #ffffff;
+    --bg-hover: #f9fafb;
+    --bg-active: #f3f4f6;
+    
+    --border-color: #d1d5db;
+    --border-light: #e5e7eb;
+    
+    --text-main: #1a1a1a;
+    --text-muted: #6b7280;
+    --text-dark: #374151;
+    
+    --accent: #2563eb;
+    --accent-hover: #1e40af;
+    --accent-light: rgba(37, 99, 235, 0.1);
+}
+
+body.dark-mode {
+    /* DARK THEME */
+    color-scheme: dark; /* Memaksa scrollbar dan dropdown native menjadi mode gelap */
+    --bg-main: #0f172a;
+    --bg-surface: #1e293b;
+    --bg-hover: #334155;
+    --bg-active: #475569;
+    
+    --border-color: #475569;
+    --border-light: #334155;
+    
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dark: #f1f5f9;
+    
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-light: rgba(59, 130, 246, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Modifikasi Scrollbar Kustom untuk estetika */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted); 
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-main);
+    height: 100vh;
+    overflow: hidden; 
+    color-scheme: light;
+}
+
+#app-container {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- MAP AREA --- */
+#map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- SIDEBAR --- */
+/* --- SIDEBAR --- */
+#sidebar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 380px;
+    height: calc(100vh - 40px);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2), 0 8px 10px -6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out;
+    z-index: 2000; 
+}
+
+#sidebar.collapsed {
+    transform: translateX(-400px); /* Geser keluar layar sepenuhnya */
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.sidebar-header h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+/* Aksesibilitas Tombol (R-32) */
+.icon-btn, #open-sidebar {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-dark);
+    background-color: var(--bg-hover);
+    transition: all 0.2s;
+}
+
+.icon-btn:hover, #open-sidebar:hover {
+    background-color: var(--bg-active);
+}
+
+/* Indikator Fokus Wajib untuk Aksesibilitas Keyboard (R-32) */
+.icon-btn:focus, #open-sidebar:focus, .filter-dropdown:focus, input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.sidebar-content {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    color: var(--text-main);
+}
+
+.description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+/* --- FORM & FILTER --- */
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.filter-dropdown {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    width: 100%;
+    background-color: var(--bg-surface);
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+/* CSS Checkbox Group */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.checkbox-group.scrollable {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    padding: 8px;
+    background-color: var(--bg-main);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    cursor: pointer;
+    user-select: none;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.checkbox-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-surface);
+    cursor: pointer;
+    display: grid;
+    place-content: center;
+    transition: all 0.2s ease;
+    margin: 0;
+}
+
+.checkbox-label input[type="checkbox"]::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    transition: 0.2s transform ease-in-out;
+    box-shadow: inset 1em 1em white;
+    background-color: white;
+    transform-origin: center;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.checkbox-label input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+.checkbox-label input[type="checkbox"]:hover {
+    border-color: var(--accent);
+}
+
+/* Tombol buka sidebar mengambang (hanya tampil saat sidebar ditutup) */
+#open-sidebar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 2000;
+    background-color: var(--bg-surface);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+    border: 1px solid var(--border-color);
+    display: none; 
+}
+
+/* --- SIDEBAR SUMMARY CARDS --- */
+.summary-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.stat-value.danger {
+    color: var(--accent-red, #dc2626); 
+}
+
+.stat-value.text-date {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/* --- FLOATING BASEMAP SELECTOR --- */
+.floating-basemap {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: var(--bg-surface);
+    border-radius: 99px;
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+}
+
+.float-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.float-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.float-btn:hover {
+    color: var(--text-main);
+    background-color: var(--bg-hover);
+}
+
+.float-btn.active {
+    color: #ffffff;
+    border-color: var(--accent);
+    background-color: var(--accent);
+    box-shadow: 0 2px 4px var(--accent-light);
+}
+
+/* R-31: Alasan desain popup - Tabel grid untuk kemudahan membaca data berpasangan (Label: Nilai) */
+.custom-popup {
+    font-family: inherit;
+    min-width: 240px;
+    color: var(--text-main);
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.popup-header h4 {
+    margin: 0;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+/* R-09: Badge diizinkan di sini karena memiliki fungsi nyata (status level kepercayaan/Confidence) */
+.badge {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge.high { background-color: #fee2e2; color: #991b1b; }
+.badge.medium { background-color: #ffedd5; color: #c2410c; }
+.badge.low { background-color: #fef08a; color: #854d0e; }
+.badge.unknown { background-color: #f3f4f6; color: #4b5563; }
+
+/* Leaflet native popup background override */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-main) !important;
+}
+
+.leaflet-popup-close-button {
+    color: var(--text-muted) !important;
+}
+.leaflet-popup-close-button:hover {
+    color: var(--text-main) !important;
+}
+
+.popup-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    border-bottom: 1px dashed var(--border-light);
+    padding-bottom: 4px;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-right: 12px;
+}
+
+.info-value {
+    color: var(--text-main);
+    text-align: right;
+    font-weight: 500;
+}
+
+/* Penyesuaian tombol Zoom bawaan Leaflet untuk mode gelap/terang */
+.leaflet-control-zoom a {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-main) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+.leaflet-control-zoom a:hover {
+    background-color: var(--bg-hover) !important;
+}
+.leaflet-bar {
+    border-color: var(--border-color) !important;
+}
+
+/* Logika CSS: Munculkan tombol open saat sidebar punya class collapsed */
+#sidebar.collapsed ~ #map-container #open-sidebar {
+    display: flex;
+}
